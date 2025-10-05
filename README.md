@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# Class of 2029 — Site Guide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a single‑page React app with an optional Photos page. The header scrolls to sections on the home page; only Photos is a separate route.
+I made this as a practice project that could maybe have some use as a website for my graduating class throughout the year — or just for fun! 
 
-Currently, two official plugins are available:
+Quick start
+- Install deps: `npm i` (or `bun install`)
+- Run dev server: `npm run dev`
+- Open: http://localhost:5173
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Structure
+- `src/App.tsx` — Home page sections (Home, Events, Board, Gallery preview, Contact) and the status bar.
+- `src/pages/Photos.tsx` — Standalone Photos page.
+- `src/components/DaysLeftBar.tsx` — “days left” status bar.
+- `src/index.css` — Theme + 8‑bit styles and small utility classes.
 
-## React Compiler
+Update the “Days Left” bar
+1) Open `src/App.tsx` and find `<DaysLeftBar firstDayISO=... lastDayISO=... />`.
+2) Set your start/end dates (ISO `YYYY-MM-DD`).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Add or edit Events
+1) Open `src/App.tsx`, find the `Upcoming Events` section.
+2) Add/remove items inside the `<ul>` list. Suggested format:
+   - `Event Name — MMM DD` (example: `Welcome Week — Aug 18`).
 
-## Expanding the ESLint configuration
+Edit the Board (alternating photo/bio)
+1) Open `src/App.tsx`, find the `Class Board` section.
+2) There are five prebuilt rows: President, Vice President, Secretary, Treasurer, Historian.
+3) Replace `TBD Name` and the sample bio text for each role.
+4) Add photos (optional):
+   - Put images in `public/board/` (create it if missing), e.g. `public/board/president.jpg`.
+   - Replace the gray square `div` with an image element, e.g.:
+     ```tsx
+     <div style={{ flex: '0 0 220px', aspectRatio: '1 / 1' }}>
+       <img className="pixel-img" src="/board/president.jpg" alt="President — Full Name" />
+     </div>
+     ```
+   - Tip: Keep images roughly square for best layout.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Gallery preview + Photos page
+- The Gallery preview lives in `src/App.tsx` under the `Gallery` section; update or replace the gray boxes.
+- The “See all photos” button goes to `/photos` (component in `src/pages/Photos.tsx`).
+- You can put full‑size images in `public/photos/` and render them there.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Contact section
+- Edit the Instagram handle link in the `Contact` section of `src/App.tsx`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Routing
+- Home page sections are anchors: `#home`, `#events`, `#board`, `#gallery`, `#contact`.
+- Photos is the only route: `/photos`.
+- Unknown routes show the NotFound page.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Theme
+- The site defaults to a white, 8‑bit‑styled theme (square corners, bold borders, pixel font).
+- Optional dark theme can be enabled by setting `data-theme="dark"` on the `<html>` element.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Notes
+- `Home.tsx`, `Events.tsx`, and `Board.tsx` are not used in the single‑page layout.
+- If you change section IDs, update the header links to match.

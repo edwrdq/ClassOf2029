@@ -1,11 +1,29 @@
+/* ===== Class of 2029 — Level Up theme ===== */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Brand palette */
+  --pixel-red: #E41C1C;      /* primary */
+  --red-hover: #FF4B4B;      /* hover/active */
+  --power-pink: #FF7A7A;     /* optional highlight */
+  --gameboy-gray: #EAEAEA;   /* surfaces/borders (light) */
+  --crt-black: #101010;      /* text on light / bg for dark */
+  --grid-line: rgba(16,16,16,0.04);
+
+  /* Semantic tokens (now default to LIGHT) */
+  --bg: #ffffff;
+  --surface: #f9f9f9;
+  --text: #111213;
+  --text-muted: #475569;
+  --link: var(--pixel-red);
+  --link-hover: var(--red-hover);
+  --border: #e5e7eb;
+
+  font-family: 'Press Start 2P', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: var(--text);
+  background-color: var(--bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +31,172 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+html { scroll-behavior: smooth; }
 
+/* Links */
+a {
+  font-weight: 700;
+  color: var(--link);
+  text-decoration: none;
+}
+a:hover { color: var(--link-hover); }
+a:focus-visible { outline: 3px solid var(--red-hover); outline-offset: 2px; }
+
+/* Page layout */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background: var(--bg);
+  /* subtle 8px grid to nod to 8-bit */
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px;
+  background-position: 0 0, 0 0;
+  color: var(--text);
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
+h2 { font-size: 1rem; line-height: 1.2; }
+h3 { font-size: 0.875rem; line-height: 1.2; }
+
+/* Buttons */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+  border-radius: 0;
+  border: 3px solid #111;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 700;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--surface);
+  color: var(--text);
   cursor: pointer;
-  transition: border-color 0.25s;
+  box-shadow: 4px 4px 0 #1112;
+  transition: transform 60ms, box-shadow 60ms, background-color 120ms;
 }
-button:hover {
-  border-color: #646cff;
-}
+button:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #1112; }
+button:active { transform: translate(0, 0); box-shadow: 0 0 0 #0000; background-color: #ececec; }
 button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+button:focus-visible { outline: 3px dashed var(--pixel-red); outline-offset: 2px; }
+
+/* Dark mode (opt-in only). Enable by setting <html data-theme="dark"> */
+:root[data-theme="dark"] {
+  --bg: #101010;
+  --surface: #161616;
+  --text: rgba(255,255,255,0.92);
+  --text-muted: rgba(255,255,255,0.7);
+  --border: rgba(255,255,255,0.12);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Optional utility classes (use if you want) */
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border: 3px solid #111;
+  border-radius: 0;
+  background: var(--pixel-red);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 4px 4px 0 #1112;
+  transition: transform 60ms, box-shadow 60ms, background-color 120ms;
+}
+.badge:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #1112; }
+.badge:active { transform: translate(0, 0); box-shadow: 0 0 0 #0000; }
+
+.card {
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 0;
+  padding: 1rem;
+  box-shadow: 6px 6px 0 #1112;
+}
+
+/* Header nav 8-bit tabs */
+header nav a {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  border: 3px solid transparent;
+}
+header nav a:hover {
+  border-color: #111;
+  background: #fff;
+}
+header nav a.active,
+header nav a[aria-current="page"] {
+  border-color: #111;
+  background: #fff;
+}
+
+/* DaysLeftBar: pixel override for inline styles */
+div[aria-label="Time left in the year"] {
+  background: #fff !important;
+  border: 3px solid var(--pixel-red) !important;
+  border-radius: 0 !important;
+  height: 16px !important;
+}
+div[aria-label="Time left in the year"] > div {
+  height: 100% !important;
+  image-rendering: pixelated;
+}
+
+/* Gallery preview tiles */
+#gallery .card > div {
+  background: #f1f5f9;
+  border: 3px solid #111;
+  border-radius: 0;
+  image-rendering: pixelated;
+}
+
+/* --- Minimal utility classes to support layout --- */
+.min-h-screen { min-height: 100vh; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-1 { flex: 1 1 0%; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.gap-6 { gap: 1.5rem; }
+
+.w-full { width: 100%; }
+.h-14 { height: 3.5rem; }
+
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+
+.mx-auto { margin-left: auto; margin-right: auto; }
+.max-w-5xl { max-width: 64rem; }
+
+.text-center { text-align: center; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.opacity-70 { opacity: 0.7; }
+
+.border-b { border-bottom: 1px solid var(--border); }
+.border-t { border-top: 1px solid var(--border); }
+
+.bg-surface { background-color: var(--surface); }
+
+/* Positioning helpers */
+.sticky { position: sticky; }
+.top-0 { top: 0; }
+.z-10 { z-index: 10; }
+
+/* Anchor scroll offset */
+.scroll-mt-16 { scroll-margin-top: 4rem; }
+
+/* Utility for pixelated images */
+.pixel-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
 }
