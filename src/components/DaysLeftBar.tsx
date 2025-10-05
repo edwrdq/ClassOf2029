@@ -8,13 +8,30 @@ type Props = {
 export default function DaysLeftBar({ firstDayISO = "2025-08-15", lastDayISO = "2026-06-05" }: Props) {
   const [today, setToday] = useState(new Date()) // current date
 
-  const start = new Date(firstDayISO) // first day
-  const msPerDay = 1000 * 60 * 60 * 24 // milliseconds in a day
-  const end = new Date(lastDayISO) // last day of freshman year
-  const diff = end.getTime() - today.getTime()
-  const totalDays = Math.max(1, Math.ceil((end.getTime() - start.getTime()) / msPerDay))
-  const daysLeft = Math.max(0, Math.ceil(diff / msPerDay)) // days left until end
-  const frac = Math.min(1, Math.max(0, daysLeft / totalDays)) // 0..1 fraction left
+  // Normalize a date to local midnight
+  const norm = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+  // Count weekdays (Mon–Fri) inclusive between two dates
+  const countWeekdaysInclusive = (start: Date, end: Date) => {
+    if (start > end) return 0
+    let count = 0
+    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate())
+    while (d <= end) {
+      const dow = d.getDay()
+      if (dow !== 0 && dow !== 6) count++ // exclude Sunday(0) and Saturday(6)
+      d.setDate(d.getDate() + 1)
+    }
+    return count
+  }
+
+  const start = norm(new Date(firstDayISO)) // first day
+  const end = norm(new Date(lastDayISO)) // last day of freshman year
+  const todayNorm = norm(today)
+
+  const totalSchoolDays = Math.max(1, countWeekdaysInclusive(start, end))
+  const rangeStart = todayNorm < start ? start : todayNorm
+  const schoolDaysLeft = Math.max(0, countWeekdaysInclusive(rangeStart, end))
+  const frac = Math.min(1, Math.max(0, schoolDaysLeft / totalSchoolDays)) // 0..1 fraction left
 
   useEffect(() => {
     const timer = setInterval(() => setToday(new Date()), 1000 * 60 * 60 * 24)
@@ -34,7 +51,7 @@ export default function DaysLeftBar({ firstDayISO = "2025-08-15", lastDayISO = "
       }}
     >
       <h2 style={{ color: "var(--pixel-red)", fontWeight: 800, margin: 0 }}>
-        {daysLeft} day{daysLeft === 1 ? "" : "s"} left
+        {schoolDaysLeft} school day{schoolDaysLeft === 1 ? "" : "s"} left
       </h2>
 
       {/* progress bar container */}
@@ -61,7 +78,7 @@ export default function DaysLeftBar({ firstDayISO = "2025-08-15", lastDayISO = "
       </div>
 
       <p style={{ color: "var(--text-muted)", margin: 0 }}>
-        {Math.round(frac * 100)}% of the year left
+        {Math.round(frac * 100)}% of school days left
       </p>
     </div>
   )
