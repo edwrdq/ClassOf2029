@@ -32,6 +32,7 @@ export default function DaysLeftBar({ firstDayISO = "2025-08-15", lastDayISO = "
   const rangeStart = todayNorm < start ? start : todayNorm
   const schoolDaysLeft = Math.max(0, countWeekdaysInclusive(rangeStart, end))
   const frac = Math.min(1, Math.max(0, schoolDaysLeft / totalSchoolDays)) // 0..1 fraction left
+  const progressDone = Math.min(1, Math.max(0, 1 - frac)) // 0..1 fraction done
 
   useEffect(() => {
     const timer = setInterval(() => setToday(new Date()), 1000 * 60 * 60 * 24)
@@ -66,19 +67,19 @@ export default function DaysLeftBar({ firstDayISO = "2025-08-15", lastDayISO = "
         }}
         aria-label="Time left in the year"
       >
-        {/* red bar fill */}
+        {/* red bar fill (progress done) */}
         <div
           style={{
             background: "var(--pixel-red)",
             height: "100%",
-            width: `${frac * 100}%`,
+            width: `${progressDone * 100}%`,
             transition: "width 0.4s ease",
           }}
         />
       </div>
 
       <p style={{ color: "var(--text-muted)", margin: 0 }}>
-        {Math.round(frac * 100)}% of school days left
+        {Math.round(progressDone * 100)}% of school days done
       </p>
     </div>
   )
